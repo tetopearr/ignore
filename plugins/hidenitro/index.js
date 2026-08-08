@@ -8,42 +8,41 @@
   });
 
   // plugins/hidenitro/src/index.ts
-  var import_patcher = __require("@revenge-mod/patcher");
-  var import_metro = __require("@revenge-mod/metro");
+  var import_plugins = __require("@revenge-mod/plugins");
   var unpatches = [];
   var src_default = {
     onLoad: () => {
       try {
-        const safeAfter = import_patcher.after || window.revenge?.patcher?.after || window.vendetta?.patcher?.after;
-        const safeInstead = import_patcher.instead || window.revenge?.patcher?.instead || window.vendetta?.patcher?.instead;
-        const safeFindByProps = import_metro.findByProps || window.revenge?.metro?.findByProps || window.vendetta?.metro?.findByProps;
-        if (!safeFindByProps)
-          return;
-        const chatBar = safeFindByProps("RenderGiftButton");
-        if (chatBar?.RenderGiftButton && safeInstead) {
-          unpatches.push(safeInstead(chatBar, "RenderGiftButton", () => null));
-        }
-        const settings = safeFindByProps("getSettingSections");
-        if (settings?.getSettingSections && safeAfter) {
+        const chatBar = import_plugins.metro.findByProps("RenderGiftButton");
+        if (chatBar) {
           unpatches.push(
-            safeAfter(settings, "getSettingSections", (_, res) => {
+            import_plugins.patcher.instead(chatBar, "RenderGiftButton", () => null)
+          );
+        }
+        const settings = import_plugins.metro.findByProps("getSettingSections");
+        if (settings) {
+          unpatches.push(
+            import_plugins.patcher.after(settings, "getSettingSections", (_, res) => {
               if (!Array.isArray(res))
                 return res;
               return res.filter((item) => {
-                const label = (item?.title || item?.key || "").toLowerCase();
+                const label = String(item?.title || item?.key || "").toLowerCase();
                 return !label.includes("nitro") && !label.includes("billing");
               });
             })
           );
         }
       } catch (err) {
-        console.error("[HideNitro Load Error]:", err);
+        console.error("[HideNitro Error]:", err);
       }
     },
     onUnload: () => {
       unpatches.forEach((unpatch) => {
-        if (typeof unpatch === "function")
-          unpatch();
+        try {
+          if (typeof unpatch === "function")
+            unpatch();
+        } catch (e) {
+        }
       });
       unpatches = [];
     }
