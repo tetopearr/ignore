@@ -3,17 +3,15 @@ const { patcher, metro } = mod || {};
 
 let unpatches = [];
 
-export default {
+module.exports = {
   onLoad: () => {
     if (!patcher || !metro) return;
 
-    // hide gift icon in chat bar
     const chatBar = metro.findByProps("RenderGiftButton");
     if (chatBar?.RenderGiftButton) {
       unpatches.push(patcher.instead(chatBar, "RenderGiftButton", () => null));
     }
 
-    // strip nitro tabs from settings
     const settings = metro.findByProps("getSettingSections");
     if (settings?.getSettingSections) {
       unpatches.push(
@@ -28,11 +26,6 @@ export default {
     }
   },
 
-  onUnload: () => {
-    unpatches.forEach((u) => u?.());
-    unpatches = [];
-  }
-};
   onUnload: () => {
     unpatches.forEach((u) => u?.());
     unpatches = [];
