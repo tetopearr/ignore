@@ -1,2 +1,2 @@
-# Themes but changed for myself or others 
-sometimes fixes
+# Currently only themes
+(cuz plugins didnt work)
