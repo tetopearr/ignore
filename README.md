@@ -1,2 +1,2 @@
-# Themes but changed to what i want lowk
-or fixes
+# Themes but changed for myself or others 
+sometimes fixes
