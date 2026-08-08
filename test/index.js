@@ -19,7 +19,7 @@ module.exports = {
           displayName: "hour",
           description: "Hour (0-23)",
           displayDescription: "Hour (0-23)",
-          type: 4, // ApplicationCommandOptionType.INTEGER
+          type: 4, 
           required: true
         },
         {
@@ -55,7 +55,7 @@ module.exports = {
           required: false
         }
       ],
-      // 1 = CHAT_INPUT
+
       type: 1,
       execute: (args, ctx) => {
         try {
@@ -63,11 +63,10 @@ module.exports = {
 
           const hour = getOpt("hour");
           const day = getOpt("day");
-          const month = getOpt("month") - 1; // JS months are 0-11
+          const month = getOpt("month") - 1; 
           const year = getOpt("year");
           const minute = getOpt("minute") || 0;
 
-          // Construct Date object in UTC
           const date = new Date(Date.UTC(year, month, day, hour, minute));
           const unix = Math.floor(date.getTime() / 1000);
 
@@ -75,7 +74,6 @@ module.exports = {
             return { content: "Invalid date provided!" };
           }
 
-          // Sends <t:UNIX:F> directly into the chat box
           return { content: `<t:${unix}:F>` };
         } catch (err) {
           return { content: "Failed to generate timestamp." };
