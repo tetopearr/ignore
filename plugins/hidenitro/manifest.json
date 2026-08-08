@@ -1,7 +1,20 @@
 {
+  "format": 1,
+  "id": "com.tetopearr.hidenitro",
   "name": "HideNitro",
-  "description": "Hides Nitro gifting buttons, shop popups, and billing banners.",
-  "author": "teto.pear_",
-  "version": "1.0",
-  "main": "js/index.ts"
+  "description": "Hides Nitro shi",
+  "icon": "NitroIcon",
+  "author": "tetopearr",
+  "version": "1.0.0",
+  "dependencies": {
+    "revenge.api": {
+      "version": ">=1 <2"
+    },
+    "discord": {
+      "version": "*"
+    }
+  },
+  "dist": {
+    "script": "index.js"
+  }
 }
