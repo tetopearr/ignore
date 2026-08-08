@@ -1,10 +1,7 @@
-declare const vendetta: any;
-declare const revenge: any;
-
-const { patcher, metro } =
-  (typeof revenge !== "undefined" ? revenge : undefined) ||
-  (typeof vendetta !== "undefined" ? vendetta : undefined) ||
-  {};
+const g = (globalThis as any);
+const revenge = g.revenge || g.vendetta || {};
+const patcher = revenge.patcher;
+const metro = revenge.metro;
 
 let unpatches: Array<() => void> = [];
 
@@ -13,6 +10,7 @@ export default {
     try {
       if (!metro || !patcher) return;
 
+      // 1. Hide Gift Button in Chat
       const chatBar = metro.findByProps("RenderGiftButton");
       if (chatBar) {
         unpatches.push(
@@ -20,6 +18,7 @@ export default {
         );
       }
 
+      // 2. Filter Nitro & Billing sections from Settings
       const settings = metro.findByProps("getSettingSections");
       if (settings) {
         unpatches.push(
