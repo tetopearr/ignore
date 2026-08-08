@@ -1,5 +1,5 @@
 import { build } from 'esbuild';
-import { readdirSync, existsSync, mkdirSync, copyFileSync } from 'fs';
+import { readdirSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 const pluginsDir = './plugins';
@@ -15,7 +15,7 @@ for (const plugin of plugins) {
 
   if (existsSync(entryPoint)) {
     console.log(`Building plugin: ${plugin}`);
-
+    
     const pluginDist = join(distDir, 'plugins', plugin);
     if (!existsSync(pluginDist)) mkdirSync(pluginDist, { recursive: true });
 
@@ -24,13 +24,19 @@ for (const plugin of plugins) {
       bundle: true,
       format: 'iife',
       target: 'es2020',
-      external: ['@revenge-mod/*', 'venom', 'vendetta'], 
+      external: ['@revenge-mod/*', 'venom', 'vendetta'],
       outfile: join(pluginDist, 'index.js'),
     });
 
     const manifestPath = join(pluginPath, 'manifest.json');
     if (existsSync(manifestPath)) {
-      copyFileSync(manifestPath, join(pluginDist, 'manifest.json'));
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+      manifest.main = 'index.js'; // Force Revenge to read index.js!
+      
+      writeFileSync(
+        join(pluginDist, 'manifest.json'),
+        JSON.stringify(manifest, null, 2)
+      );
     }
   }
 }
