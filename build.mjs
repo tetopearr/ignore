@@ -22,7 +22,7 @@ for (const plugin of plugins) {
     await build({
       entryPoints: [entryPoint],
       bundle: true,
-      format: 'iife',
+      format: 'cjs',
       target: 'es2020',
       external: ['@revenge-mod/*', 'venom', 'vendetta'],
       outfile: join(pluginDist, 'index.js'),
