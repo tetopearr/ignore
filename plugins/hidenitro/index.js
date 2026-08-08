@@ -22,7 +22,10 @@ var PluginModule = (() => {
   __export(src_exports, {
     default: () => src_default
   });
-  var { patcher, metro } = (typeof revenge !== "undefined" ? revenge : void 0) || (typeof vendetta !== "undefined" ? vendetta : void 0) || {};
+  var g = globalThis;
+  var revenge = g.revenge || g.vendetta || {};
+  var patcher = revenge.patcher;
+  var metro = revenge.metro;
   var unpatches = [];
   var src_default = {
     onLoad: () => {
