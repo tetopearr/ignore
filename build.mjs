@@ -1,5 +1,5 @@
 import { build } from 'esbuild';
-import { readdirSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { readdirSync, existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from 'fs';
 import { join } from 'path';
 
 const pluginsDir = './plugins';
@@ -31,12 +31,16 @@ for (const plugin of plugins) {
     const manifestPath = join(pluginPath, 'manifest.json');
     if (existsSync(manifestPath)) {
       const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
-      manifest.main = 'index.js'; // Force Revenge to read index.js!
-      
+      manifest.main = 'index.js';
       writeFileSync(
         join(pluginDist, 'manifest.json'),
         JSON.stringify(manifest, null, 2)
       );
+    }
+
+    const htmlPath = join(pluginPath, 'index.html');
+    if (existsSync(htmlPath)) {
+      copyFileSync(htmlPath, join(pluginDist, 'index.html'));
     }
   }
 }
