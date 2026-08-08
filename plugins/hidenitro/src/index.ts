@@ -1,4 +1,10 @@
-const { patcher, metro } = (window as any).revenge || (window as any).vendetta || {};
+declare const vendetta: any;
+declare const revenge: any;
+
+const { patcher, metro } =
+  (typeof revenge !== "undefined" ? revenge : undefined) ||
+  (typeof vendetta !== "undefined" ? vendetta : undefined) ||
+  {};
 
 let unpatches: Array<() => void> = [];
 
