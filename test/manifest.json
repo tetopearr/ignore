@@ -2,5 +2,5 @@
   "name": "timestamp",
   "description": "/t command to make timestamps",
   "author": "tetopearr",
-  "main": "index.js"
+  "main": "./index.js"
 }
