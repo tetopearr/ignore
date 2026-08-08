@@ -1,48 +1,36 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var stdin_exports = {};
-__export(stdin_exports, {
-  default: () => stdin_default
-});
-module.exports = __toCommonJS(stdin_exports);
-var import_plugins = require("@revenge-mod/plugins");
-let unpatches = [];
-var stdin_default = {
-  onLoad: () => {
-    const chatBar = import_plugins.metro.findByProps("RenderGiftButton");
-    if (chatBar?.RenderGiftButton) {
-      unpatches.push(import_plugins.patcher.instead(chatBar, "RenderGiftButton", () => null));
+(() => {
+  const mod = window.revenge || window.vendetta;
+  const patcher = mod?.patcher || mod?.metro?.patcher;
+  const metro = mod?.metro;
+
+  let unpatches = [];
+
+  return {
+    onLoad: () => {
+      if (!patcher || !metro) return;
+
+      const chatBar = metro.findByProps("RenderGiftButton");
+      if (chatBar?.RenderGiftButton) {
+        unpatches.push(patcher.instead(chatBar, "RenderGiftButton", () => null));
+      }
+
+      const settings = metro.findByProps("getSettingSections");
+      if (settings?.getSettingSections) {
+        unpatches.push(
+          patcher.after(settings, "getSettingSections", (_, res) => {
+            if (!Array.isArray(res)) return res;
+            return res.filter((item) => {
+              const label = (item?.title || item?.key || "").toLowerCase();
+              return !label.includes("nitro") && !label.includes("billing");
+            });
+          })
+        );
+      }
+    },
+
+    onUnload: () => {
+      unpatches.forEach((u) => u?.());
+      unpatches = [];
     }
-    const settings = import_plugins.metro.findByProps("getSettingSections");
-    if (settings?.getSettingSections) {
-      unpatches.push(
-        import_plugins.patcher.after(settings, "getSettingSections", (_, res) => {
-          if (!Array.isArray(res)) return res;
-          return res.filter((item) => {
-            const label = (item?.title || item?.key || "").toLowerCase();
-            return !label.includes("nitro") && !label.includes("billing");
-          });
-        })
-      );
-    }
-  },
-  onUnload: () => {
-    unpatches.forEach((unpatch) => unpatch?.());
-    unpatches = [];
-  }
-};
+  };
+})();
