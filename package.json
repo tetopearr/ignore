@@ -2,11 +2,11 @@
   "name": "revenge-plugins",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "revenge-build"
+    "build": "node build.js"
   },
   "devDependencies": {
-    "@revenge-mod/cli": "latest",
-    "typescript": "^5.0.0"
+    "esbuild": "^0.20.0"
   }
 }
