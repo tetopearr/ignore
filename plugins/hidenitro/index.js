@@ -1,18 +1,20 @@
-import { patcher } from "@revenge-mod/patcher";
-import { findByProps } from "@revenge-mod/metro";
+const mod = window.revenge || window.vendetta;
+const { patcher, metro } = mod || {};
 
 let unpatches = [];
 
 export default {
   onLoad: () => {
-    // hide gift icon in chat
-    const chatBar = findByProps("RenderGiftButton");
+    if (!patcher || !metro) return;
+
+    // hide gift icon in chat bar
+    const chatBar = metro.findByProps("RenderGiftButton");
     if (chatBar?.RenderGiftButton) {
       unpatches.push(patcher.instead(chatBar, "RenderGiftButton", () => null));
     }
 
-    // strip nitro tabs from settings menu
-    const settings = findByProps("getSettingSections");
+    // strip nitro tabs from settings
+    const settings = metro.findByProps("getSettingSections");
     if (settings?.getSettingSections) {
       unpatches.push(
         patcher.after(settings, "getSettingSections", (_, res) => {
@@ -26,6 +28,11 @@ export default {
     }
   },
 
+  onUnload: () => {
+    unpatches.forEach((u) => u?.());
+    unpatches = [];
+  }
+};
   onUnload: () => {
     unpatches.forEach((u) => u?.());
     unpatches = [];
