@@ -1,0 +1,7 @@
+{
+  "name": "HideNitro",
+  "description": "Hides Nitro gifting buttons, shop popups, and billing banners.",
+  "author": "teto.pear_",
+  "version": "1.0",
+  "main": "index.js"
+}
