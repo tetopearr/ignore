@@ -1,0 +1,6 @@
+{
+  "name": "HideNitro",
+  "description": "Hides Nitro stuff",
+  "author": "tetopearr",
+  "main": "src/index.ts"
+}
