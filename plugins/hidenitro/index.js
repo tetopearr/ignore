@@ -22,7 +22,7 @@ __export(src_exports, {
   default: () => src_default
 });
 module.exports = __toCommonJS(src_exports);
-var { patcher, metro } = window.revenge || window.vendetta || {};
+var { patcher, metro } = (typeof revenge !== "undefined" ? revenge : void 0) || (typeof vendetta !== "undefined" ? vendetta : void 0) || {};
 var unpatches = [];
 var src_default = {
   onLoad: () => {
