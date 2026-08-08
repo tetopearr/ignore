@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+# Grant permissions to push to gh-pages branch
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,12 +23,17 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install Dependencies & Build
-        run: |
-          pnpm install --no-frozen-lockfile
-          pnpm build
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build Plugins
+        run: pnpm build
 
       - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
